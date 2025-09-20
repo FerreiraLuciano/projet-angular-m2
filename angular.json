@@ -61,7 +61,7 @@
               "buildTarget": "projet-angular-m2:build:production"
             },
             "development": {
-              "buildTarget": "projet-anguler-m2:build:development"
+              "buildTarget": "projet-angular-m2:build:development"
             }
           },
           "defaultConfiguration": "development"
