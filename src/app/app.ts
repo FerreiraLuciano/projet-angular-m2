@@ -1,12 +1,19 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
+import { HeaderComponent } from './shared/components/header/header.component';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.scss',
+  standalone: true,
+  imports: [RouterOutlet, HeaderComponent],
+  template: `
+    <app-header></app-header>
+    <main class="container mx-auto p-4">
+      <router-outlet> </router-outlet>
+    </main>
+  `,
+  styles: [],
 })
 export class App {
-  protected readonly title = signal('projet-angular-m2');
+  title = 'projet-angular-m2';
 }
