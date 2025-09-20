@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "todo-list-app": {
+    "projet-angular-m2": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -58,10 +58,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "todo-list-app:build:production"
+              "buildTarget": "projet-angular-m2:build:production"
             },
             "development": {
-              "buildTarget": "todo-list-app:build:development"
+              "buildTarget": "projet-anguler-m2:build:development"
             }
           },
           "defaultConfiguration": "development"
