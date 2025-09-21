@@ -13,14 +13,15 @@ import { Component, inject } from '@angular/core';
         <nav>
           <ul class="flex space-x-4">
             @if (authService.currentUser()) {
-            <li><a routerLink="/home" class="hover:text-blue-200">Home</a></li>
+            <li><a routerLink="/movies" class="hover:text-blue-200">Films</a></li>
+            <li><a routerLink="/movies/watchlist" class="hover:text-blue-200">Watchlist</a></li>
             @if (authService.currentUser()?.role === 'admin') {
             <li><a routerLink="/admin" class="hover:text-blue-200">Admin</a></li>
             }
-            <li><button (click)="logout()" class="hover:text-blue-200">Logout</button></li>
+            <li><button (click)="logout()" class="hover:text-blue-200">Déconnexion</button></li>
             } @else {
-            <li><a routerLink="/auth/login" class="hover:text-blue-200">Login</a></li>
-            <li><a routerLink="/auth/register" class="hover:text-blue-200">Register</a></li>
+            <li><a routerLink="/auth/login" class="hover:text-blue-200">Connexion</a></li>
+            <li><a routerLink="/auth/register" class="hover:text-blue-200">Créer un compte</a></li>
             }
           </ul>
         </nav>
