@@ -171,7 +171,7 @@ export class RegisterComponent {
       this.loading.set(false);
 
       if (result.success && result.user) {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/movies']);
       } else {
         this.error.set(result.error || 'Erreur lors de la création du compte');
       }

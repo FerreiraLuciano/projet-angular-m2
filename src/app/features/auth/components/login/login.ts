@@ -112,7 +112,7 @@ export class LoginComponent {
         this.loading.set(false);
 
         if (result.success && result.user) {
-          this.router.navigate(['/home']);
+          this.router.navigate(['/movies']);
         } else {
           this.error.set(result.error || 'Erreur de connexion');
         }
@@ -122,7 +122,6 @@ export class LoginComponent {
           this.error.set(err.message || 'Erreur inattendue');
         }
       }
-      console.log('login form valide');
     }
   }
 
