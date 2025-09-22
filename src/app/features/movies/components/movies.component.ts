@@ -1,16 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { moviesMock } from '../../../infrastructure/mock-data/movies';
+import { MOCK_MOVIES } from '../../../infrastructure/mock-data/movies';
 import { WatchlistService } from '../services/watchlist.service';
 import { TmdbService } from '../services/tmdb.service';
 import { Movie } from '../models/movie.model';
 import { PosterUrlPipe } from '../../../shared/pipes/poster-url.pipe';
+import { DetailButtonComponent } from '../../../shared/components/buttons/detail-button.component';
 
 @Component({
   selector: 'app-movie-search',
   standalone: true,
-  imports: [CommonModule, FormsModule, PosterUrlPipe],
+  imports: [CommonModule, FormsModule, PosterUrlPipe, DetailButtonComponent],
   template: `
     <div class="bg-white p-6 rounded-lg shadow mb-6">
       <h2 class="text-xl font-semibold mb-4">🎬 Films disponibles</h2>
@@ -33,7 +34,8 @@ import { PosterUrlPipe } from '../../../shared/pipes/poster-url.pipe';
 
       <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         @for (movie of searchResults(); track movie.id) {
-        <div class="bg-gray-50 rounded-lg shadow p-4">
+        <div class="bg-gray-50 rounded-lg shadow p-4 relative">
+          <app-detail-button [movieId]="movie.id"></app-detail-button>
           <img
             [src]="movie | posterUrl"
             [alt]="movie.title"
@@ -58,7 +60,7 @@ export class MoviesComponent {
   private watchlist = inject(WatchlistService);
 
   query = signal('');
-  searchResults = signal<Movie[]>(moviesMock);
+  searchResults = signal<Movie[]>(MOCK_MOVIES);
   loading = signal(false);
 
   constructor() {
@@ -72,8 +74,6 @@ export class MoviesComponent {
       this.loading.set(true);
       const results = await this.tmdb.discoverMovies();
       this.searchResults.set(results);
-    } catch (e) {
-      console.error('Erreur de recherche TMDB:', e);
     } finally {
       this.loading.set(false);
     }
@@ -88,8 +88,6 @@ export class MoviesComponent {
       this.loading.set(true);
       const results = await this.tmdb.searchMovies(this.query());
       this.searchResults.set(results);
-    } catch (e) {
-      console.error('Erreur de recherche TMDB:', e);
     } finally {
       this.loading.set(false);
     }
