@@ -1,6 +1,6 @@
 import { Movie } from '../../features/movies/models/movie.model';
 
-export const moviesMock: Movie[] = [
+export const MOCK_MOVIES: Movie[] = [
   {
     adult: false,
     backdrop_path: '/1RgPyOhN4DRs225BGTlHJqCudII.jpg',
