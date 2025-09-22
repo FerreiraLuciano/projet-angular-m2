@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Movie } from '../models/movie.model';
-import { moviesMock } from '../../../infrastructure/mock-data/movies';
+import { MOCK_MOVIES } from '../../../infrastructure/mock-data/movies';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +12,7 @@ export class TmdbService {
 
   async searchMovies(query: string): Promise<Movie[]> {
     if (!this.apiKey) {
-      return moviesMock.filter((m) => m.title.toLowerCase().includes(query.toLowerCase()));
+      return MOCK_MOVIES.filter((m) => m.title.toLowerCase().includes(query.toLowerCase()));
     }
 
     const url = `${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${encodeURIComponent(
@@ -30,7 +30,7 @@ export class TmdbService {
 
   async discoverMovies(): Promise<Movie[]> {
     if (!this.apiKey) {
-      return moviesMock;
+      return MOCK_MOVIES;
     }
 
     const url = `${this.baseUrl}/discover/movie?api_key=${this.apiKey}`;

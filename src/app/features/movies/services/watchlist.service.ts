@@ -1,12 +1,19 @@
-import { Injectable, signal } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { Movie } from '../models/movie.model';
+import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WatchlistService {
-  private storageKey = 'watchlist';
+  private authService = inject(AuthService);
+  private currentUserId = this.authService.currentUser()?.id;
+
   private watchlist = signal<Movie[]>(this.loadFromStorage());
+
+  private get storageKey(): string {
+    return this.currentUserId ? `watchlist_${this.currentUserId}` : 'watchlist_guest';
+  }
 
   private saveToStorage() {
     localStorage.setItem(this.storageKey, JSON.stringify(this.watchlist()));
@@ -15,10 +22,6 @@ export class WatchlistService {
   private loadFromStorage(): Movie[] {
     const data = localStorage.getItem(this.storageKey);
     return data ? JSON.parse(data) : [];
-  }
-
-  getAll() {
-    return this.watchlist();
   }
 
   add(movie: Movie) {
