@@ -332,7 +332,7 @@ export const MOCK_MOVIES: Movie[] = [
     original_language: 'fr',
     original_title: 'La Chose Derrière La Porte',
     overview:
-      'The story of Adèle, a youg woman who’s literally haunted by the death of her husband, killed in a trench during World War One. Desperate and unable to face this tragic loss, Adèle turns to black magic in the hope to bring her lover back. The miracle will happen, but Adèle will have to pay the price for opening this Pandora Box.',
+      'The story of Adèle, a young woman who’s literally haunted by the death of her husband, killed in a trench during World War One. Desperate and unable to face this tragic loss, Adèle turns to black magic in the hope to bring her lover back. The miracle will happen, but Adèle will have to pay the price for opening this Pandora Box.',
     popularity: 133.6358,
     poster_path: '/iFqHmF8ZSY9jOhstqeRxuzxPkFp.jpg',
     release_date: '2023-01-16',
