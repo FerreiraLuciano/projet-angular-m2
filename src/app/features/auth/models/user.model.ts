@@ -18,3 +18,11 @@ export interface RegisterRequest {
   password: string;
   confirmPassword: string;
 }
+
+export interface DisplayUser extends Omit<User, 'password'> {
+  id: number;
+  name: string;
+  email: string;
+  role: 'user' | 'admin';
+  createdAt?: Date;
+}

@@ -1,5 +1,5 @@
 import { computed, Injectable, signal } from '@angular/core';
-import { User, LoginRequest, RegisterRequest } from '../models/user.model';
+import { User, LoginRequest, RegisterRequest, DisplayUser } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
@@ -148,5 +148,27 @@ export class AuthService {
     if (storedUsers) {
       this.users.set(JSON.parse(storedUsers));
     }
+  }
+
+  async updateUser(userData: DisplayUser): Promise<User> {
+    let updatedUser: User | null = null;
+    this.users.update((users) => {
+      return users.map((user) => {
+        if (user.id === userData.id) {
+          updatedUser = {
+            ...user,
+            ...userData,
+          };
+          return updatedUser;
+        }
+        return user;
+      });
+    });
+
+    this.saveUsersToLocalStorage();
+
+    if (!updatedUser) throw new Error('User not found');
+
+    return updatedUser;
   }
 }
