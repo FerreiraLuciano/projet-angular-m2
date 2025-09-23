@@ -23,3 +23,10 @@ export interface MovieRequest {
   user: number;
   status: 'watched' | 'to watch';
 }
+
+export interface MovieResponse {
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: Movie[];
+}
