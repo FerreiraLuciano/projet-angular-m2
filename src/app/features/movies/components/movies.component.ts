@@ -16,7 +16,6 @@ import { DetailButtonComponent } from '../../../shared/components/buttons/detail
     <div class="bg-white p-6 rounded-lg shadow mb-6">
       <h2 class="text-xl font-semibold mb-4">🎬 Films disponibles</h2>
 
-      @if (tmdb.hasApiKey()) {
       <form (ngSubmit)="searchMovies()" class="flex gap-2 mb-4">
         <input
           type="text"
@@ -30,7 +29,6 @@ import { DetailButtonComponent } from '../../../shared/components/buttons/detail
           Rechercher
         </button>
       </form>
-      }
 
       <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-4">
         @for (movie of searchResults(); track movie.id) {

@@ -1,31 +1,38 @@
-import { Injectable } from '@angular/core';
-import { Movie } from '../models/movie.model';
+import { inject, Injectable } from '@angular/core';
+import { Movie, MovieResponse } from '../models/movie.model';
 import { MOCK_MOVIES } from '../../../infrastructure/mock-data/movies';
+import { environment } from '../../../environnement/env.dev';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TmdbService {
-  private apiKey = '';
+  private http = inject(HttpClient);
   private baseUrl = 'https://api.themoviedb.org/3';
   private imageBase = 'https://image.tmdb.org/t/p/w500';
 
-  async searchMovies(query: string): Promise<Movie[]> {
-    if (!this.apiKey) {
-      return MOCK_MOVIES.filter((m) => m.title.toLowerCase().includes(query.toLowerCase()));
-    }
+  private apiKey = environment.API_KEY;
 
-    const url = `${this.baseUrl}/search/movie?api_key=${this.apiKey}&query=${encodeURIComponent(
-      query
-    )}`;
-    const res = await fetch(url);
-    const data = await res.json();
+  private async request_wrapper(url: string) {
+    const data = await firstValueFrom(this.http.get<MovieResponse>(url));
 
     return data.results.map((m: Movie) => ({
       ...m,
       posterUrl: m.poster_path ? `${this.imageBase}${m.poster_path}` : undefined,
       backdropUrl: m.backdrop_path ? `${this.imageBase}${m.backdrop_path}` : undefined,
     })) as Movie[];
+  }
+
+  async searchMovies(query: string): Promise<Movie[]> {
+    if (!this.apiKey) {
+      return MOCK_MOVIES.filter((m) => m.title.toLowerCase().includes(query.toLowerCase()));
+    }
+
+    const url = `${this.baseUrl}/search/movie?query=${encodeURIComponent(query)}`;
+
+    return await this.request_wrapper(url);
   }
 
   async discoverMovies(): Promise<Movie[]> {
@@ -33,18 +40,8 @@ export class TmdbService {
       return MOCK_MOVIES;
     }
 
-    const url = `${this.baseUrl}/discover/movie?api_key=${this.apiKey}`;
-    const res = await fetch(url);
-    const data = await res.json();
+    const url = `${this.baseUrl}/discover/movie`;
 
-    return data.results.map((m: Movie) => ({
-      ...m,
-      posterUrl: m.poster_path ? `${this.imageBase}${m.poster_path}` : undefined,
-      backdropUrl: m.backdrop_path ? `${this.imageBase}${m.backdrop_path}` : undefined,
-    })) as Movie[];
-  }
-
-  hasApiKey(): boolean {
-    return !!this.apiKey;
+    return await this.request_wrapper(url);
   }
 }
