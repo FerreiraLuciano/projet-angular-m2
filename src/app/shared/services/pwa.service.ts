@@ -23,16 +23,13 @@ export class PwaService {
   private swUpdate = inject(SwUpdate);
   private errorService = inject(ErrorService);
 
-  // Signals for PWA state
   private deferredPrompt = signal<BeforeInstallPromptEvent | null>(null);
   private isInstalled = signal<boolean>(false);
   private isOnline = signal<boolean>(navigator.onLine);
   private updateAvailable = signal<boolean>(false);
 
-  // Computed for state install
   canInstall = computed(() => !!this.deferredPrompt() && !this.isInstalled());
 
-  // État public readonly
   readonly online = this.isOnline.asReadonly();
   readonly hasUpdate = this.updateAvailable.asReadonly();
 
@@ -64,7 +61,7 @@ export class PwaService {
   }
 
   /**
-   * Verif if l'app is in standalone mode (installed)
+   * Verify if app is in standalone mode (installed)
    */
   private checkIfInstalled(): void {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches;

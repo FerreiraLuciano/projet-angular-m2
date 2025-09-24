@@ -5,8 +5,15 @@ import { environment } from '../../environnement/env.dev';
 
 @Injectable()
 export class ApiKeyInterceptor implements HttpInterceptor {
+  /**
+   * API key (Bearer token) loaded from the environment configuration.
+   */
   private readonly apiKey = environment.API_KEY;
 
+  /**
+   * Intercepts outgoing HTTP requests and appends the `Authorization` header
+   * if the request is directed to `api.themoviedb.org`.
+   */
   intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
     if (request.url.includes('api.themoviedb.org')) {
       const modifiedRequest = request.clone({
