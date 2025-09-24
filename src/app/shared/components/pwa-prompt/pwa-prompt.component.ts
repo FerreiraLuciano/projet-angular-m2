@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PwaService } from '../../services/pwa.service';
 
@@ -8,7 +8,7 @@ import { PwaService } from '../../services/pwa.service';
   imports: [CommonModule],
   template: `
     <!-- Prompt d'installation -->
-    @if (pwaService.canInstall()) {
+    @if (pwaService.canInstall() && show()) {
     <div class="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:max-w-sm z-50">
       <div class="bg-blue-600 text-white p-4 rounded-lg shadow-lg border border-blue-500">
         <div class="flex items-start gap-3">
@@ -119,6 +119,7 @@ import { PwaService } from '../../services/pwa.service';
 })
 export class PwaPromptComponent {
   public pwaService = inject(PwaService);
+  show = signal<boolean>(true);
 
   async installApp(): Promise<void> {
     await this.pwaService.installApp();
@@ -130,6 +131,7 @@ export class PwaPromptComponent {
 
   dismissPrompt(): void {
     // On pourrait stocker cette préférence en localStorage
+    this.show.set(false);
     console.warn('[PWA] Install prompt dismissed');
   }
 
