@@ -78,6 +78,7 @@
       "params": {
         "title": "title",
         "text": "description"
-      }
+      },
+      "enctype": "application/x-www-form-urlencoded"
     }
 }

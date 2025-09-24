@@ -132,11 +132,10 @@ export class PwaPromptComponent {
   dismissPrompt(): void {
     // On pourrait stocker cette préférence en localStorage
     this.show.set(false);
-    console.warn('[PWA] Install prompt dismissed');
   }
 
   dismissUpdate(): void {
     // On pourrait reporter la notification de mise à jour
-    console.warn('[PWA] Update prompt dismissed');
+    this.show.set(false);
   }
 }

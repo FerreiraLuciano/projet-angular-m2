@@ -50,14 +50,12 @@ export class PwaService {
   private initializePwa(): void {
     // Install event detection
     window.addEventListener('beforeinstallprompt', (event: Event) => {
-      console.warn('[PWA] Installation prompt available');
       event.preventDefault();
       this.deferredPrompt.set(event as BeforeInstallPromptEvent);
     });
 
     // Detect if the app is already installed
     window.addEventListener('appinstalled', () => {
-      console.warn('[PWA] App installed successfully');
       this.isInstalled.set(true);
       this.deferredPrompt.set(null);
       this.errorService.showInfo('Application installée avec succès !');
@@ -76,7 +74,6 @@ export class PwaService {
 
     if (isStandalone || isInWebAppiOS) {
       this.isInstalled.set(true);
-      console.warn('[PWA] App is running in standalone mode');
     }
   }
 
@@ -86,13 +83,11 @@ export class PwaService {
   private setupNetworkListener(): void {
     window.addEventListener('online', () => {
       this.isOnline.set(true);
-      console.warn('[PWA] Network: Online');
       this.errorService.showInfo('Connexion rétablie');
     });
 
     window.addEventListener('offline', () => {
       this.isOnline.set(false);
-      console.warn('[PWA] Network: Offline');
       this.errorService.showWarning('Mode hors ligne activé');
     });
   }
@@ -106,22 +101,14 @@ export class PwaService {
       this.swUpdate.versionUpdates
         .pipe(filter((event): event is VersionReadyEvent => event.type === 'VERSION_READY'))
         .subscribe(() => {
-          console.warn('[PWA] New version available');
           this.updateAvailable.set(true);
           this.errorService.showInfo('Nouvelle version disponible !');
         });
 
       setInterval(() => {
-        this.swUpdate
-          .checkForUpdate()
-          .then((hasUpdate) => {
-            if (hasUpdate) {
-              console.warn('[PWA] Update check: New version found');
-            }
-          })
-          .catch((error) => {
-            console.error('[PWA] Update check failed:', error);
-          });
+        this.swUpdate.checkForUpdate().catch((error) => {
+          throw error;
+        });
       }, 6 * 60 * 60 * 1000);
     }
   }
@@ -132,15 +119,12 @@ export class PwaService {
   async installApp(): Promise<boolean> {
     const prompt = this.deferredPrompt();
     if (!prompt) {
-      console.warn('[PWA] No install prompt available');
       return false;
     }
 
     try {
       await prompt.prompt();
       const { outcome } = await prompt.userChoice;
-
-      console.warn(`[PWA] Install prompt result: ${outcome}`);
 
       if (outcome === 'accepted') {
         this.errorService.showInfo('Installation en cours...');
@@ -149,9 +133,8 @@ export class PwaService {
         this.errorService.showInfo('Installation annulée');
         return false;
       }
-    } catch (error) {
-      console.error('[PWA] Install error:', error);
-      this.errorService.showError('Erreur lors de l\'installation');
+    } catch (e) {
+      this.errorService.showError('Erreur lors de l\'installation', e);
       return false;
     }
   }
@@ -172,9 +155,8 @@ export class PwaService {
       setTimeout(() => {
         window.location.reload();
       }, 1000);
-    } catch (error) {
-      console.error('[PWA] Update activation failed:', error);
-      this.errorService.showError('Erreur lors de la mise à jour');
+    } catch (e) {
+      this.errorService.showError('Erreur lors de la mise à jour', e);
     }
   }
 
@@ -183,17 +165,14 @@ export class PwaService {
    */
   async shareContent(data: { title?: string; text?: string; url?: string }): Promise<boolean> {
     if (!navigator.share) {
-      console.warn('[PWA] Web Share API not supported');
       return false;
     }
 
     try {
       await navigator.share(data);
-      console.warn('[PWA] Content shared successfully');
       return true;
     } catch (error) {
       if ((error as Error).name !== 'AbortError') {
-        console.error('[PWA] Share failed:', error);
         this.errorService.showError('Erreur lors du partage');
       }
       return false;
