@@ -33,8 +33,6 @@ export class PwaService {
   canInstall = computed(() => !!this.deferredPrompt() && !this.isInstalled());
 
   // État public readonly
-  readonly installPrompt = this.deferredPrompt.asReadonly();
-  readonly installed = this.isInstalled.asReadonly();
   readonly online = this.isOnline.asReadonly();
   readonly hasUpdate = this.updateAvailable.asReadonly();
 
@@ -134,7 +132,7 @@ export class PwaService {
         return false;
       }
     } catch (e) {
-      this.errorService.showError('Erreur lors de l\'installation', e);
+      this.errorService.showError('Erreur lors de l\'installation' + e);
       return false;
     }
   }
@@ -156,40 +154,7 @@ export class PwaService {
         window.location.reload();
       }, 1000);
     } catch (e) {
-      this.errorService.showError('Erreur lors de la mise à jour', e);
+      this.errorService.showError('Erreur lors de la mise à jour ' + e);
     }
-  }
-
-  /**
-   * Share content with Web Share API
-   */
-  async shareContent(data: { title?: string; text?: string; url?: string }): Promise<boolean> {
-    if (!navigator.share) {
-      return false;
-    }
-
-    try {
-      await navigator.share(data);
-      return true;
-    } catch (error) {
-      if ((error as Error).name !== 'AbortError') {
-        this.errorService.showError('Erreur lors du partage');
-      }
-      return false;
-    }
-  }
-
-  /**
-   * Get PWA stats
-   */
-  getStats() {
-    return {
-      isInstalled: this.isInstalled(),
-      canInstall: this.canInstall(),
-      isOnline: this.isOnline(),
-      hasUpdate: this.updateAvailable(),
-      swEnabled: this.swUpdate.isEnabled,
-      shareSupported: !!navigator.share,
-    };
   }
 }
