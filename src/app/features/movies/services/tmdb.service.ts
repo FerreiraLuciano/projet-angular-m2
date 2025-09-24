@@ -15,6 +15,10 @@ export class TmdbService {
 
   private apiKey = environment.API_KEY;
 
+  /**
+   * Makes an HTTP GET request to the provided URL, processes the movie response,
+   * and returns a list of processed movies with formatted properties.
+   */
   private async request_wrapper(url: string) {
     const data = await firstValueFrom(this.http.get<MovieResponse>(url));
 
@@ -25,6 +29,9 @@ export class TmdbService {
     })) as Movie[];
   }
 
+  /**
+   * Searches for movies based on the provided query string. If an API key is not available, mocked data is used instead.
+   */
   async searchMovies(query: string): Promise<Movie[]> {
     if (!this.apiKey) {
       return MOCK_MOVIES.filter((m) => m.title.toLowerCase().includes(query.toLowerCase()));
@@ -35,6 +42,9 @@ export class TmdbService {
     return await this.request_wrapper(url);
   }
 
+  /**
+   * Fetches a list of movies from a movie database API or returns a mock movies array if no API key is provided.
+   */
   async discoverMovies(): Promise<Movie[]> {
     if (!this.apiKey) {
       return MOCK_MOVIES;

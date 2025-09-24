@@ -12,7 +12,6 @@ export interface ErrorNotification {
 })
 export class ErrorService {
   private errors = signal<ErrorNotification[]>([]);
-  public errors$ = this.errors.asReadonly();
 
   showError(message: string) {
     this.addNotification(message, 'error');
@@ -44,10 +43,6 @@ export class ErrorService {
 
   removeError(id: string) {
     this.errors.update((errors) => errors.filter((error) => error.id !== id));
-  }
-
-  clearAll() {
-    this.errors.set([]);
   }
 
   private generateId(): string {
